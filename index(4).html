@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Atos - Permanência</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #eef3f7;
+            color: #1f2d3d;
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: 30px auto;
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+        }
+
+        header {
+            padding: 26px 32px;
+            background: #0b3b5f;
+            color: white;
+        }
+
+        header h1 {
+            margin: 0 0 8px;
+            font-size: 26px;
+        }
+
+        header p {
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            background: #dfeaf2;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            background: transparent;
+            color: #173f5f;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .tab-button.active {
+            background: #ffffff;
+            color: #0b3b5f;
+            border-top: 4px solid #f28c28;
+        }
+
+        main {
+            padding: 30px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .section-title {
+            margin: 0 0 20px;
+            color: #0b3b5f;
+            font-size: 20px;
+        }
+
+        .row {
+            display: flex;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .field {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            color: #173f5f;
+            font-weight: bold;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 13px;
+            border: 2px solid #dce4ea;
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #0b3b5f;
+        }
+
+        .btn-gerar {
+            width: 100%;
+            padding: 16px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 10px;
+            background: #0b3b5f;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-gerar:hover {
+            background: #12517d;
+        }
+
+        .btn-gerar:disabled {
+            background: #8b9aa5;
+            cursor: wait;
+        }
+
+        .message {
+            display: none;
+            margin-top: 18px;
+            padding: 13px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .message.success {
+            display: block;
+            color: #155724;
+            background: #d4edda;
+        }
+
+        .message.error {
+            display: block;
+            color: #721c24;
+            background: #f8d7da;
+        }
+
+        .hint {
+            margin-top: -8px;
+            margin-bottom: 18px;
+            color: #60788c;
+            font-size: 13px;
+        }
+
+        footer {
+            padding: 16px;
+            text-align: center;
+            color: #60788c;
+            background: #f4f7f9;
+            font-size: 13px;
+        }
+
+        @media (max-width: 700px) {
+            .container { margin: 0; border-radius: 0; }
+            .row { display: block; margin-bottom: 0; }
+            .field { margin-bottom: 18px; }
+            main { padding: 22px; }
+            header { padding: 22px; }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <header>
+        <h1>Gerador de Atos Administrativos</h1>
+        <p>Abono de Permanência e Adicional de Permanência</p>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-button active" type="button" onclick="abrirAba('abono')">Abono de Permanência</button>
+        <button class="tab-button" type="button" onclick="abrirAba('adicional')">Adicional de Permanência</button>
+    </div>
+
+    <main>
+        <section id="aba-abono" class="tab-content active">
+            <h2 class="section-title">Abono de Permanência</h2>
+
+            <form id="form-abono">
+                <div class="row">
+                    <div class="field">
+                        <label for="abono-sexo">Sexo do servidor</label>
+                        <select id="abono-sexo" required>
+                            <option value="masculino">Masculino</option>
+                            <option value="feminino">Feminino</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="abono-responsavel">Responsável</label>
+                        <input type="text" id="abono-responsavel" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="field">
+                        <label for="abono-n-ato">Nº do ato</label>
+                        <input type="text" id="abono-n-ato" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="abono-ano">Ano</label>
+                        <input type="text" id="abono-ano" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="abono-numero-processo">Número do processo</label>
+                        <input type="text" id="abono-numero-processo" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="field">
+                        <label for="abono-data-solicitacao">Data da solicitação</label>
+                        <input type="text" id="abono-data-solicitacao" placeholder="Ex.: 10/06/2026" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="abono-data-direito">Data do direito</label>
+                        <input type="text" id="abono-data-direito" placeholder="Ex.: 01/06/2026" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="field">
+                        <label for="abono-nome-servidor">Nome do servidor</label>
+                        <input type="text" id="abono-nome-servidor" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="abono-matricula">Matrícula</label>
+                        <input type="text" id="abono-matricula" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="field">
+                        <label for="abono-cargo">Cargo</label>
+                        <input type="text" id="abono-cargo" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="abono-oficio-diviprev">Ofício DIVIPREV</label>
+                        <input type="text" id="abono-oficio-diviprev" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="abono-previsao">Previsão legal</label>
+                    <select id="abono-previsao" required>
+                        <option value="">Selecione...</option>
+                        <option value="art. 2º, § 5º, da Emenda Constitucional nº 41/2003, c/c artigo 69, da Lei Complementar nº 126/2006">
+                            art. 2º, § 5º, da Emenda Constitucional nº 41/2003, c/c artigo 69, da Lei Complementar nº 126/2006
+                        </option>
+                        <option value="art. 3º, § 1º, da Emenda Constitucional nº 41/2003, c/c artigo 69, § 1º, da Lei Complementar nº 126/2006">
+                            art. 3º, § 1º, da Emenda Constitucional nº 41/2003, c/c artigo 69, § 1º, da Lei Complementar nº 126/2006
+                        </option>
+                        <option value="artigo 40, § 19, da Constituição Federal 1988, c/c artigo 69, da Lei Complementar nº 126/2006">
+                            artigo 40, § 19, da Constituição Federal 1988, c/c artigo 69, da Lei Complementar nº 126/2006
+                        </option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="abono-condicao">Condição</label>
+                    <select id="abono-condicao" required disabled>
+                        <option value="">Selecione uma previsão legal primeiro</option>
+                    </select>
+                </div>
+
+                <button class="btn-gerar" id="btn-abono" type="submit">Gerar Documento</button>
+                <div id="msg-abono" class="message"></div>
+            </form>
+        </section>
+
+        <section id="aba-adicional" class="tab-content">
+            <h2 class="section-title">Adicional de Permanência</h2>
+
+            <form id="form-adicional">
+                <div class="row">
+                    <div class="field">
+                        <label for="adicional-sexo">Sexo do servidor</label>
+                        <select id="adicional-sexo" required>
+                            <option value="masculino">Masculino</option>
+                            <option value="feminino">Feminino</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="adicional-responsavel">Responsável</label>
+                        <input type="text" id="adicional-responsavel" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="field">
+                        <label for="adicional-n-ato">Nº do ato</label>
+                        <input type="text" id="adicional-n-ato" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="adicional-ano">Ano</label>
+                        <input type="text" id="adicional-ano" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="adicional-numero-processo">Número do processo</label>
+                        <input type="text" id="adicional-numero-processo" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="field">
+                        <label for="adicional-data-solicitacao">Data da solicitação</label>
+                        <input type="text" id="adicional-data-solicitacao" placeholder="Ex.: 10/06/2026" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="adicional-data-direito">Data do direito</label>
+                        <input type="text" id="adicional-data-direito" placeholder="Ex.: 01/06/2026" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="field">
+                        <label for="adicional-nome-servidor">Nome do servidor</label>
+                        <input type="text" id="adicional-nome-servidor" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="adicional-matricula">Matrícula</label>
+                        <input type="text" id="adicional-matricula" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="adicional-cargo">Cargo</label>
+                    <input type="text" id="adicional-cargo" required>
+                </div>
+
+                <button class="btn-gerar" id="btn-adicional" type="submit">Gerar Documento</button>
+                <div id="msg-adicional" class="message"></div>
+            </form>
+        </section>
+    </main>
+
+    <footer>Gerência de Governo Digital</footer>
+</div>
+
+<script src="https://unpkg.com/pizzip@3.2.0/dist/pizzip.js"></script>
+<script src="https://unpkg.com/docxtemplater@3.68.7/build/docxtemplater.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+
+<script>
+    const modelos = {
+        abono: {
+            masculino: "./templates/abono-masculino.docx",
+            feminino: "./templates/abono-feminino.docx"
+        },
+        adicional: {
+            masculino: "./templates/adicional-masculino.docx",
+            feminino: "./templates/adicional-feminino.docx"
+        }
+    };
+
+    const condicoesAbono = {
+        1: [
+            {
+                texto: "art. 2º, § 1º, da Emenda Constitucional nº 41/2003, c/c artigo 64, § 1º, da Lei Complementar nº 126/2006"
+            },
+            {
+                texto: "art. 2º, caput, da Emenda Constitucional nº 41/2003, c/c artigo 64 da Lei Complementar nº 126/2006"
+            }
+        ],
+        2: [
+            {
+                texto: "art. 3º, § 1º, da Emenda Constitucional nº 41/2003, c/c artigo 69, § 1º, da Lei Complementar nº 126/2006"
+            }
+        ],
+        3: [
+            {
+                texto: "artigo 40, § 1º, inciso III, alínea “a”, da Constituição Federal 1988, c/c artigo 15, da Lei Complementar nº 126/2006"
+            },
+            {
+                texto: "artigo 40, § 1º, inciso III, alínea “a”, da Constituição Federal 1988, c/c artigo 40, § 5º, da Constituição Federal 1988, c/c artigo 15, § 1º, da Lei Complementar nº 126/2006"
+            },
+            {
+                texto: "artigo 40, § 5º, da Constituição Federal 1988, c/c artigo 15, §1º, da Lei Complementar nº 126/2006"
+            }
+        ]
+    };
+
+    function atualizarCondicoesAbono() {
+        const previsao = document.getElementById("abono-previsao");
+        const condicao = document.getElementById("abono-condicao");
+        const indicePrevisao = previsao.selectedIndex;
+
+        condicao.innerHTML = "";
+
+        if (!indicePrevisao) {
+            condicao.disabled = true;
+            condicao.innerHTML = '<option value="">Selecione uma previsão legal primeiro</option>';
+            return;
+        }
+
+        const opcoes = condicoesAbono[indicePrevisao] || [];
+
+        opcoes.forEach((opcao) => {
+            const elemento = document.createElement("option");
+            elemento.value = opcao.texto;
+            elemento.textContent = opcao.texto;
+            condicao.appendChild(elemento);
+        });
+
+        condicao.disabled = indicePrevisao === 2;
+    }
+
+    document.getElementById("abono-previsao").addEventListener("change", atualizarCondicoesAbono);
+
+    function abrirAba(nome) {
+        document.querySelectorAll(".tab-content").forEach(aba => {
+            aba.classList.remove("active");
+        });
+
+        document.querySelectorAll(".tab-button").forEach(botao => {
+            botao.classList.remove("active");
+        });
+
+        document.getElementById(`aba-${nome}`).classList.add("active");
+
+        const indice = nome === "abono" ? 0 : 1;
+        document.querySelectorAll(".tab-button")[indice].classList.add("active");
+    }
+
+    function mostrarMensagem(id, texto, tipo) {
+        const elemento = document.getElementById(id);
+        elemento.textContent = texto;
+        elemento.className = `message ${tipo}`;
+    }
+
+    function limparNomeArquivo(texto) {
+        return texto
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[^a-zA-Z0-9_-]/g, "_")
+            .replace(/_+/g, "_")
+            .replace(/^_|_$/g, "")
+            .substring(0, 60);
+    }
+
+    async function gerarDocumento({tipo, sexo, dados, nomeArquivo, msgId, btnId}) {
+        const botao = document.getElementById(btnId);
+        botao.disabled = true;
+        const textoOriginal = botao.textContent;
+        botao.textContent = "Gerando documento...";
+
+        try {
+            const resposta = await fetch(modelos[tipo][sexo]);
+
+            if (!resposta.ok) {
+                throw new Error(`Modelo não encontrado. HTTP ${resposta.status}`);
+            }
+
+            const conteudo = await resposta.arrayBuffer();
+            const zip = new PizZip(conteudo);
+
+            const documento = new window.docxtemplater(zip, {
+                paragraphLoop: true,
+                linebreaks: true
+            });
+
+            documento.render(dados);
+
+            const blob = documento.toBlob();
+            saveAs(blob, nomeArquivo);
+
+            mostrarMensagem(msgId, "Documento gerado com sucesso.", "success");
+        } catch (erro) {
+            console.error(erro);
+
+            let detalhe = erro.message;
+
+            if (erro.properties && Array.isArray(erro.properties.errors)) {
+                detalhe = erro.properties.errors
+                    .map(item => item.properties.explanation)
+                    .join(" | ");
+            }
+
+            mostrarMensagem(msgId, `Erro ao gerar documento: ${detalhe}`, "error");
+        } finally {
+            botao.disabled = false;
+            botao.textContent = textoOriginal;
+        }
+    }
+
+    document.getElementById("form-abono").addEventListener("submit", async function(evento) {
+        evento.preventDefault();
+
+        const sexo = document.getElementById("abono-sexo").value;
+        const nomeServidor = document.getElementById("abono-nome-servidor").value.trim();
+
+        const dados = {
+            responsavel: document.getElementById("abono-responsavel").value.trim(),
+            n_ato: document.getElementById("abono-n-ato").value.trim(),
+            ano: document.getElementById("abono-ano").value.trim(),
+            numero_processo: document.getElementById("abono-numero-processo").value.trim(),
+            data_solicitacao: document.getElementById("abono-data-solicitacao").value.trim(),
+            nome_servidor: nomeServidor.toUpperCase(),
+            cargo: document.getElementById("abono-cargo").value.trim().toUpperCase(),
+            matricula: document.getElementById("abono-matricula").value.trim(),
+            previsao: document.getElementById("abono-previsao").value.trim(),
+            condicao: document.getElementById("abono-condicao").value.trim(),
+            data_direito: document.getElementById("abono-data-direito").value.trim(),
+            oficio_diviprev: document.getElementById("abono-oficio-diviprev").value.trim()
+        };
+
+        const nomeArquivo = `ABONO_DE_PERMANENCIA_${limparNomeArquivo(nomeServidor)}.docx`;
+
+        await gerarDocumento({
+            tipo: "abono",
+            sexo,
+            dados,
+            nomeArquivo,
+            msgId: "msg-abono",
+            btnId: "btn-abono"
+        });
+    });
+
+    document.getElementById("form-adicional").addEventListener("submit", async function(evento) {
+        evento.preventDefault();
+
+        const sexo = document.getElementById("adicional-sexo").value;
+        const nomeServidor = document.getElementById("adicional-nome-servidor").value.trim();
+
+        const dados = {
+            responsavel: document.getElementById("adicional-responsavel").value.trim(),
+            n_ato: document.getElementById("adicional-n-ato").value.trim(),
+            ano: document.getElementById("adicional-ano").value.trim(),
+            numero_processo: document.getElementById("adicional-numero-processo").value.trim(),
+            data_solicitacao: document.getElementById("adicional-data-solicitacao").value.trim(),
+            nome_servidor: nomeServidor.toUpperCase(),
+            cargo: document.getElementById("adicional-cargo").value.trim().toUpperCase(),
+            matricula: document.getElementById("adicional-matricula").value.trim(),
+            data_direito: document.getElementById("adicional-data-direito").value.trim()
+        };
+
+        const nomeArquivo = `ADICIONAL_DE_PERMANENCIA_${limparNomeArquivo(nomeServidor)}.docx`;
+
+        await gerarDocumento({
+            tipo: "adicional",
+            sexo,
+            dados,
+            nomeArquivo,
+            msgId: "msg-adicional",
+            btnId: "btn-adicional"
+        });
+    });
+</script>
+</body>
+</html>
